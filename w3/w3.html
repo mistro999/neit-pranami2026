@@ -1,0 +1,72 @@
+<DocType html>
+<html lang = "en">
+    <head>
+        <title> week 3 Drawing on Canvas Lab</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <h1>Drawing on Canvas Example<h1>
+            <canvas id=canvas width ="800" height="800" style="border: 5px wide black,"></canvas>
+            <!-- IN doccument JavaScript--->
+                <script>
+                    //These varables are used to set up the canvas
+                    var canvas= document.getElementById("canvas");
+                    var ctx = canvas.getContext('2d');
+                    ctx.strokeStyle = "black";
+                    ctx.fillStyle="yellow";
+                    ctx.fillRect(170,72,200,150); 
+                    ctx.strokeRect(170,72,200,150);
+                    
+
+                    //ctx.strokeStyle = `#f00`
+                    //ctx.beginPath();
+                    //ctx.arc(385,411,20,0,2*Math.PI)
+                    //ctx.stroke();
+
+
+                    ctx.fillStyle = "#ffff00"
+                    ctx.strokeStyle = "red"
+                    ctx.beginPath();
+                    ctx.arc(385,441, 135, 0, 2*Math.PI)
+                    ctx.fill();
+                    ctx.stroke();
+                    
+
+                    ctx.lineWidth =1.0;
+                    ctx.strokeStyle = "red"
+                    ctx.beginPath(0,0);
+                    ctx.lineTo(85,682);
+                    ctx.lineTo(279,549);
+                    ctx.stroke();
+
+                    ctx.fillStyle = "#ffff00"
+                    ctx.strokeStyle = "32,32,32";
+                    ctx.beginPath(0,0);
+                    ctx.moveTo(733,563);
+                    ctx.lineTo(688,615);
+                    ctx.lineTo(696,681);
+                    ctx.lineTo(636,654);
+                    ctx.lineTo(574,681);
+                    ctx.lineTo(582,615);
+                    ctx.lineTo(538,565);
+                    ctx.lineTo(604,553);
+                    ctx.lineTo(634,496);
+                    ctx.lineTo(668,554);
+                    ctx.lineTo(733,563);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.fillStyle = "#ff00ff"
+                    ctx.strokeStyle = "00ffff";
+                    ctx.beginPath(0,0);
+                    ctx.moveTo(547,420);
+                    ctx.lineTo(650,465);
+                    ctx.lineTo(725,380);
+                    ctx.lineTo(667,284);
+                    ctx.lineTo(557,308);
+                    ctx.lineTo(547,420);
+                    ctx.fill();
+                    ctx.stroke();
+                     </script>
+                    </body>
+        </html>
