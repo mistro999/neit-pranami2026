@@ -3,6 +3,11 @@
     <head>
         <title> week 3 Drawing on Canvas Lab</title>
         <meta charset="UTF-8">
+        <style>
+            #canvas{
+                background-image:url("images/shapes.png");
+            }
+        </style>
     </head>
     <body>
         <h1>Drawing on Canvas Example<h1>
@@ -14,8 +19,8 @@
                     var ctx = canvas.getContext('2d');
                     ctx.strokeStyle = "black";
                     ctx.fillStyle="yellow";
-                    ctx.fillRect(170,72,200,150); 
-                    ctx.strokeRect(170,72,200,150);
+                    ctx.fillRect(85,302,100,100); 
+                    ctx.strokeRect(85,302,100,100);
                     
 
                     //ctx.strokeStyle = `#f00`
@@ -27,7 +32,7 @@
                     ctx.fillStyle = "#ffff00"
                     ctx.strokeStyle = "red"
                     ctx.beginPath();
-                    ctx.arc(385,441, 135, 0, 2*Math.PI)
+                    ctx.arc(385,441, 66, 0, 2*Math.PI)
                     ctx.fill();
                     ctx.stroke();
                     
