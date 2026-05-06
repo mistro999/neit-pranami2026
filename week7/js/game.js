@@ -3,21 +3,24 @@ var ctx = c.getContext(`2d`);
 var fps = 1000/60;
 var timer = setInterval(main, fps);
 
+var gravity = 1.0;
+
 // Player / Avatar setup
-var avatar = new GameObject();
+var avatar = new gameObject();
 avatar.color = `blue`;
 avatar.w = 40;
 avatar.h = 40;
 avatar.vx = 4;
 avatar.vy = 4;
+avatar.f= 4;
 
 // Starting Platform
-var startPlatform = new GameObject();
+var startPlatform = new gameObject();
 startPlatform.x = 50;
 startPlatform.y = 250;
 startPlatform.w = 100;
 startPlatform.h = 20;
-startPlatform.color = `gray`;
+startPlatform.color = `dark gray`;
 
 // Set player to start on the platform
 avatar.x = startPlatform.x;
@@ -28,7 +31,7 @@ var obstacles = [];
 var obstacleCount = 3;
 for(var i = 0; i < obstacleCount; i++)
 {
-    obstacles[i] = new GameObject();
+    obstacles[i] = new gameObject();
     obstacles[i].color = `red`;
     obstacles[i].w = 30;
     obstacles[i].h = 30;
@@ -41,8 +44,8 @@ var platforms = [];
 var platCount = 4;
 for(var i = 0; i < platCount; i++)
 {
-    platforms[i] = new GameObject();
-    platforms[i].color = `green`;
+    platforms[i] = new gameObject();
+    platforms[i].color = `dark grey`;
     platforms[i].w = 80;
     platforms[i].h = 15;
     platforms[i].x = 150 + (i * 150);
@@ -50,7 +53,7 @@ for(var i = 0; i < platCount; i++)
 }
 
 // End Goal
-var goal = new GameObject();
+var goal = new gameObject();
 goal.color = `gold`;
 goal.x = 750;
 goal.y = 250;
@@ -80,20 +83,14 @@ function main()
     }
 
     // Space to change player color
-    if(space == true)
-    {
-        avatar.color = `yellow`;
-    }
-    else
-    {
-        avatar.color = `blue`;
-    }
+    
 
     // Screen Bounds
-    if(avatar.x < 0 + avatar.w/2) { avatar.x = 0 + avatar.w/2; }
+   if (avatar.x < 0 + avatar.h / 2) {avatar.x = 0 + avatar.h / 2;}
     if(avatar.x > c.width - avatar.w/2) { avatar.x = c.width - avatar.w/2; }
     if(avatar.y < 0 + avatar.h/2) { avatar.y = 0 + avatar.h/2; }
-    if(avatar.y > c.height - avatar.h/2) { avatar.y = c.height - avatar.h/2; }
+
+    
 
     // Collision with Obstacles (Reset to Start)
     for(var i = 0; i < obstacles.length; i++)
@@ -122,6 +119,18 @@ function main()
         ctx.fillText(`YOU WIN!`, c.width/2, c.height/2);
     }
 
+    if(avatar.y > c.height - avatar.h/2) { 
+        avatar.vy = 0;
+        avatar.y = c.height - avatar.h/2; 
+        console.log(space);
+        if(space == true)
+        {
+            avatar.vy = -20;
+            
+        }
+    }
+    avatar.vy += gravity;
+    avatar.y += avatar.vy;
     goal.render();
     avatar.render();
 }
