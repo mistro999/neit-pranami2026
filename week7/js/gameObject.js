@@ -3,11 +3,12 @@ class gameObject {
         this.x = c.width / 2;
         this.y = c.height / 2;
         this.angle = 0;
-        this.w = 100;
-        this.h = 100;
-        this.vx = 0;
-        this.vy = 0;
+        this.w = 80;
+        this.h = 60;
+        this.vx = 20;
+        this.vy = 30;
         this.color = `blue`;
+        this.sprite = "";
     }
 
     // Standard Rectangle
@@ -24,9 +25,9 @@ class gameObject {
     renderSprite() {
         ctx.save();
         ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle * Math.PI / 180);
+        ctx.rotate(this.angle * Math.PI / 200);
         ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
         ctx.beginPath();
         ctx.moveTo(-this.w / 2, -this.h / 2);
@@ -34,6 +35,7 @@ class gameObject {
         ctx.moveTo(this.w / 2, -this.h / 2);
         ctx.lineTo(-this.w / 2, this.h / 2);
         ctx.stroke();
+        ctx.drawImage(this.sprite, -this.w/2, -this.h/2, this.w, this.h);
         ctx.restore();
     }
 

@@ -1,4 +1,5 @@
 var c = document.querySelector(`canvas`);
+var spear = document.getElementById("spear");
 var ctx = c.getContext(`2d`);
 var fps = 1000/60;
 var timer = setInterval(main, fps);
@@ -33,6 +34,7 @@ for(var i = 0; i < obstacleCount; i++)
 {
     obstacles[i] = new gameObject();
     obstacles[i].color = `red`;
+    obstacles[i].sprite = spear;
     obstacles[i].w = 30;
     obstacles[i].h = 30;
     obstacles[i].x = 200 + (i * 150);
@@ -41,15 +43,16 @@ for(var i = 0; i < obstacleCount; i++)
 
 // Jumping Platforms
 var platforms = [];
-var platCount = 4;
+var platCount = 10;
 for(var i = 0; i < platCount; i++)
 {
     platforms[i] = new gameObject();
     platforms[i].color = `dark grey`;
     platforms[i].w = 80;
     platforms[i].h = 15;
-    platforms[i].x = 150 + (i * 150);
-    platforms[i].y = rand(150, 350);
+    platforms[i].y = rand(300, c.height - 40);
+    platforms[i].x = rand(150, c.width - 50);
+    platforms[i].y = rand(300, c.height - 40);
 }
 
 // End Goal
@@ -64,7 +67,7 @@ function main()
 {
     ctx.clearRect(0,0,c.width,c.height);
 
-    // WASD Movement
+    // Movement
     if(d == true)
     {
         avatar.x += avatar.vx;
@@ -73,20 +76,10 @@ function main()
     {
         avatar.x += -avatar.vx;
     }
-    if(w == true)
-    {
-        avatar.y += -avatar.vy;
-    }
-    if(s == true)
-    {
-        avatar.y += avatar.vy; 
-    }
-
-    // Space to change player color
     
 
     // Screen Bounds
-   if (avatar.x < 0 + avatar.h / 2) {avatar.x = 0 + avatar.h / 2;}
+   if (avatar.x < 1 + avatar.h / 2) {avatar.x = 0 + avatar.h / 2;}
     if(avatar.x > c.width - avatar.w/2) { avatar.x = c.width - avatar.w/2; }
     if(avatar.y < 0 + avatar.h/2) { avatar.y = 0 + avatar.h/2; }
 
@@ -98,9 +91,9 @@ function main()
         if(avatar.overlaps(obstacles[i]))
         {
             avatar.x = startPlatform.x;
-            avatar.y = startPlatform.y - 30;
+            avatar.y = startPlatform.y - 100;
         }
-        obstacles[i].render();
+        obstacles[i].renderSprite();
     }
 
     // Render Platforms
@@ -111,23 +104,49 @@ function main()
     }
 
     // Win Detection
-    if(avatar.overlaps(goal))
-    {
-        ctx.fillStyle = `black`;
-        ctx.font = `50px Arial`;
-        ctx.textAlign = `center`;
-        ctx.fillText(`YOU WIN!`, c.width/2, c.height/2);
+    if (avatar.overlaps(goal)) {
+    // Set text styles
+    ctx.fillStyle = "black";
+    ctx.font = "50px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle"; 
+    ctx.fillText("YOU WIN!", c.width / 2, c.height / 2);
     }
+
 
     if(avatar.y > c.height - avatar.h/2) { 
         avatar.vy = 0;
         avatar.y = c.height - avatar.h/2; 
-        console.log(space);
+        
         if(space == true)
         {
             avatar.vy = -20;
             
         }
+    }
+   //collision with platforms 
+    for(var i = 0; i< platforms.length; i++){
+        while(platforms[i].overlaps(avatar) && avatar.vy >= 0){
+            avatar.vy = 0;
+            avatar.y--;
+            if(space == true)
+            {
+                avatar.vy = -20;
+                
+            }
+        }
+    }
+
+    //collision with start platform
+    if(startPlatform.overlaps(avatar) && avatar.vy >= 0){
+            avatar.y = startPlatform.y - 10 - 20;
+            avatar.vy = 0;
+            avatar.y--;
+            if(space == true)
+            {
+                avatar.vy = -20;
+                
+            }
     }
     avatar.vy += gravity;
     avatar.y += avatar.vy;
