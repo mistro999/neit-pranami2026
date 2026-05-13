@@ -2,9 +2,13 @@ var c = document.querySelector(`canvas`);
 var spear = document.getElementById("spear");
 var ctx = c.getContext(`2d`);
 var fps = 1000/60;
-var timer = setInterval(main, fps);
+var states = [];
+var state;
+var timer = setInterval(gameLoop, fps);
 
 var gravity = 1.0;
+
+var mainMenuGraphic = new gameObject();
 
 // Player / Avatar setup
 var avatar = new gameObject();
@@ -62,10 +66,118 @@ goal.x = 750;
 goal.y = 250;
 goal.w = 50;
 goal.h = 50;
+var spear = document.getElementById("spear");
 
-function main() 
+
+
+
+
+
+
+
+
+// Set player to start on the platform
+avatar.x = startPlatform.x;
+avatar.y = startPlatform.y - 30;
+
+// Obstacles (Array for multiple)
+var obstacles = [];
+var obstacleCount = 3;
+for(var i = 0; i < obstacleCount; i++)
 {
-    ctx.clearRect(0,0,c.width,c.height);
+    obstacles[i] = new gameObject();
+    obstacles[i].color = `red`;
+    obstacles[i].sprite = spear;
+    obstacles[i].w = 30;
+    obstacles[i].h = 30;
+    obstacles[i].x = 200 + (i * 150);
+    obstacles[i].y = rand(100, 400);
+}
+
+// Jumping Platforms
+var platforms = [];
+var platCount = 10;
+for(var i = 0; i < platCount; i++)
+{
+    platforms[i] = new gameObject();
+    platforms[i].color = `dark grey`;
+    platforms[i].w = 80;
+    platforms[i].h = 15;
+    platforms[i].y = rand(300, c.height - 40);
+    platforms[i].x = rand(150, c.width - 50);
+    platforms[i].y = rand(300, c.height - 40);
+}
+
+// End Goal
+var goal = new gameObject();
+goal.color = `gold`;
+goal.x = 750;
+goal.y = 250;
+goal.w = 50;
+goal.h = 50;
+
+var menuimage=document.getElementById("menu");
+var menu = new gameObject();
+menu.sprite = menuimage;
+menu.x = c.width/2;
+menu.y = c.height/2;
+menu.w = c.width;
+menu.h = c.height;
+
+var gameimage = document.getElementById("game");
+var gamebg = new gameObject();
+gamebg.sprite = gameimage;
+gamebg.x = c.width/2;
+gamebg.y = c.height/2;
+gamebg.w = c.width; 
+gamebg.h = c.height;
+
+
+
+/*---------------Game Screens (states)----------------*/
+states["menu"] = function()
+{
+    if(enter)
+    {
+        state = "main";
+        
+        //timer = setInterval(state, fps);
+        
+    }
+    menu.renderSprite();
+    mainMenuGraphic.render();
+    ctx.fillStyle ="blue"; 
+    ctx.font = "30px arial"; 
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Jumpman surivor", c.width / 2, (c.height / 2) - 40);
+    ctx.fillStyle ="#04D9FF";
+    ctx.fillText("press eneter", c.width / 2, (c.height / 2) + 40);
+
+    
+}
+
+states["win"] = function()
+{
+    // Set player to start on the platform
+    avatar.x = startPlatform.x;
+    avatar.y = startPlatform.y - 30;
+    setTimeout(function(){state = "menu"}, 2000);
+    ctx.fillText("YOU WIN!", c.width / 2, c.height / 2);
+    //mainMenuGraphic.render();
+    
+}
+
+
+function rand(_low, _high) 
+{
+    return Math.random()*(_high - _low) + _low;
+}
+
+states["main"] = function()
+{
+    gamebg.renderSprite();
+    
 
     // Movement
     if(d == true)
@@ -104,14 +216,17 @@ function main()
     }
 
     // Win Detection
-    if (avatar.overlaps(goal)) {
-    // Set text styles
+   if (avatar.overlaps(goal)) {
     ctx.fillStyle = "black";
     ctx.font = "50px Arial";
     ctx.textAlign = "center";
-    ctx.textBaseline = "middle"; 
-    ctx.fillText("YOU WIN!", c.width / 2, c.height / 2);
-    }
+    ctx.textBaseline = "middle";
+    // Set player to start on the platform
+    avatar.x = startPlatform.x;
+    avatar.y = startPlatform.y - 30;
+    state = "win";
+    //avatar.overlaps = function() { return true; };
+}
 
 
     if(avatar.y > c.height - avatar.h/2) { 
@@ -152,6 +267,13 @@ function main()
     avatar.y += avatar.vy;
     goal.render();
     avatar.render();
+}
+state = "menu";
+function gameLoop(){
+    ctx.clearRect(0,0,c.width,c.height);
+    //call the gamestate
+
+    states[state]();
 }
 
 function rand(_low, _high) 

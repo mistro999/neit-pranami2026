@@ -6,6 +6,8 @@ var a = false;
 var s = false;
 var d = false;
 var space = false;
+var enter = false;
+
 
 /*---Key Press Code-----------*/
 
@@ -18,6 +20,7 @@ function press(e)
     if(e.keyCode == 65){a = true;}
     if(e.keyCode == 68){d = true;}
     if(e.keyCode == 32){ space = true}
+    if(e.keyCode == 13){ enter = true}
 }
 
 /*---Key Release Code-----------*/
@@ -29,4 +32,6 @@ function release(e)
     if(e.keyCode == 65){a = false;}
     if(e.keyCode == 68){d = false;}
     if(e.keyCode == 32){space = false;}
+    if(e.keyCode == 13){enter = false;}
 }
+

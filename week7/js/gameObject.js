@@ -1,5 +1,6 @@
 class gameObject {
     constructor() {
+        timer = 2000;
         this.x = c.width / 2;
         this.y = c.height / 2;
         this.angle = 0;
@@ -10,6 +11,7 @@ class gameObject {
         this.color = `blue`;
         this.sprite = "";
     }
+    
 
     // Standard Rectangle
     render() {
@@ -74,4 +76,6 @@ class gameObject {
         }
         return false;
     }
+
+    
 }
