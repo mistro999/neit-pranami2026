@@ -4,7 +4,7 @@ var ctx = c.getContext(`2d`);
 var fps = 1000/60;
 var states = [];
 var state;
-var timer = setInterval(gameLoop, fps);
+var timer = setInterval(state, fps);
 
 var gravity = 1.0;
 
@@ -67,14 +67,6 @@ goal.y = 250;
 goal.w = 50;
 goal.h = 50;
 var spear = document.getElementById("spear");
-
-
-
-
-
-
-
-
 
 // Set player to start on the platform
 avatar.x = startPlatform.x;
@@ -199,6 +191,8 @@ states["main"] = function()
 
     // Collision with Obstacles (Reset to Start)
     for(var i = 0; i < obstacles.length; i++)
+
+    
     {
         if(avatar.overlaps(obstacles[i]))
         {
@@ -207,6 +201,10 @@ states["main"] = function()
         }
         obstacles[i].renderSprite();
     }
+    //Hitting the gound(reset to start)
+    if (playerY >= groundY) { 
+        resetGame();
+
 
     // Render Platforms
     startPlatform.render();
@@ -221,6 +219,7 @@ states["main"] = function()
     ctx.font = "50px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+
     // Set player to start on the platform
     avatar.x = startPlatform.x;
     avatar.y = startPlatform.y - 30;
@@ -254,12 +253,12 @@ states["main"] = function()
 
     //collision with start platform
     if(startPlatform.overlaps(avatar) && avatar.vy >= 0){
-            avatar.y = startPlatform.y - 10 - 20;
+            avatar.y = startPlatform.y - 10 - 10;
             avatar.vy = 0;
             avatar.y--;
             if(space == true)
             {
-                avatar.vy = -20;
+                avatar.vy = -10;
                 
             }
     }
@@ -279,4 +278,5 @@ function gameLoop(){
 function rand(_low, _high) 
 {
     return Math.random()*(_high - _low) + _low;
+    }
 }
