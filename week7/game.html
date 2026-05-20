@@ -4,12 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #myCanvas{
+                display:block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            @font-face{
+                font-family: GameFont;
+                src: url(images/UrbanHeroes.ttf);
+            }
+
+    </style>
+    
 </head>
 <body>
-    <canvas width="900" height="700" style="border: 1px solid black;"></canvas>
+    <canvas width="900" height="700" style="border: 1px solid black;" id="myCanvas"></canvas>
+    <audio id="deathFX">
+        <source src="audio/doomguy death sound effect.mp3">
+    </audio>
+    <audio id="WinFX">
+        <source src="audio/Heavens Choir Sound Effect.mp3">
+    </audio>
+    <audio id="amienceFX">
+        <source src="audio/Outlast  All AmbienceMusic  Administrative Block.mp3">
+    </audio>
     <img src="images/spear.jpg" alt="spear obstacles" id="spear" style="display:none;"></img>
-    <img src="images/backgroundforgame.jpg" alt="game background" id="game" style="display:none;"></img>
-    <img src="images/bakcgroundformenu.jpg" alt="memu background" id="menu" style="display:none;"></img>
+    <img src="images//backgroundforgame.jpg" alt="game background" id="game" style="display:none;"></img>
+    <img src="images//menu.jpg" alt="memu background" id="menu" style="display:none;"></img>
 
     <script src="js/controls.js"></script>
     <script src="js/gameObject.js"></script>

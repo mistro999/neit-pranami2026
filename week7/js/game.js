@@ -4,7 +4,10 @@ var ctx = c.getContext(`2d`);
 var fps = 1000/60;
 var states = [];
 var state;
-var timer = setInterval(state, fps);
+var timer = setInterval(gameLoop, fps);
+var deathSoundFX = document.getElementById("deathFX");
+var WinFX = document.getElementById("WinFX");
+var amienceFX =document.getElementById("amienceFX");
 
 var gravity = 1.0;
 
@@ -31,41 +34,6 @@ startPlatform.color = `dark gray`;
 avatar.x = startPlatform.x;
 avatar.y = startPlatform.y - 30;
 
-// Obstacles (Array for multiple)
-var obstacles = [];
-var obstacleCount = 3;
-for(var i = 0; i < obstacleCount; i++)
-{
-    obstacles[i] = new gameObject();
-    obstacles[i].color = `red`;
-    obstacles[i].sprite = spear;
-    obstacles[i].w = 30;
-    obstacles[i].h = 30;
-    obstacles[i].x = 200 + (i * 150);
-    obstacles[i].y = rand(100, 400);
-}
-
-// Jumping Platforms
-var platforms = [];
-var platCount = 10;
-for(var i = 0; i < platCount; i++)
-{
-    platforms[i] = new gameObject();
-    platforms[i].color = `dark grey`;
-    platforms[i].w = 80;
-    platforms[i].h = 15;
-    platforms[i].y = rand(300, c.height - 40);
-    platforms[i].x = rand(150, c.width - 50);
-    platforms[i].y = rand(300, c.height - 40);
-}
-
-// End Goal
-var goal = new gameObject();
-goal.color = `gold`;
-goal.x = 750;
-goal.y = 250;
-goal.w = 50;
-goal.h = 50;
 var spear = document.getElementById("spear");
 
 // Set player to start on the platform
@@ -75,38 +43,50 @@ avatar.y = startPlatform.y - 30;
 // Obstacles (Array for multiple)
 var obstacles = [];
 var obstacleCount = 3;
-for(var i = 0; i < obstacleCount; i++)
-{
-    obstacles[i] = new gameObject();
-    obstacles[i].color = `red`;
-    obstacles[i].sprite = spear;
-    obstacles[i].w = 30;
-    obstacles[i].h = 30;
-    obstacles[i].x = 200 + (i * 150);
-    obstacles[i].y = rand(100, 400);
-}
+
 
 // Jumping Platforms
 var platforms = [];
 var platCount = 10;
-for(var i = 0; i < platCount; i++)
-{
-    platforms[i] = new gameObject();
-    platforms[i].color = `dark grey`;
-    platforms[i].w = 80;
-    platforms[i].h = 15;
-    platforms[i].y = rand(300, c.height - 40);
-    platforms[i].x = rand(150, c.width - 50);
-    platforms[i].y = rand(300, c.height - 40);
-}
+
 
 // End Goal
 var goal = new gameObject();
-goal.color = `gold`;
-goal.x = 750;
-goal.y = 250;
-goal.w = 50;
-goal.h = 50;
+
+
+function rollLevel(){
+
+
+    //Rolls Obstacles
+    for(var i = 0; i < obstacleCount; i++)
+    {
+        obstacles[i] = new gameObject();
+        obstacles[i].color = `red`;
+        obstacles[i].sprite = spear;
+        obstacles[i].w = 30;
+        obstacles[i].h = 30;
+        obstacles[i].x = 200 + (i * 150);
+        obstacles[i].y = rand(100, 400);
+    }
+
+    //Rolls Platforms
+    for(var i = 0; i < platCount; i++)
+    {
+        platforms[i] = new gameObject();
+        platforms[i].color = `dark grey`;
+        platforms[i].w = 80;
+        platforms[i].h = 15;
+        platforms[i].y = rand(300, c.height - 40);
+        platforms[i].x = rand(150, c.width - 50);
+        platforms[i].y = rand(300, c.height - 40);
+    }
+    //Rolls Goal
+    goal.color = `gold`;
+    goal.x = 750;
+    goal.y = 250;
+    goal.w = 50;
+    goal.h = 50;
+}
 
 var menuimage=document.getElementById("menu");
 var menu = new gameObject();
@@ -124,6 +104,7 @@ gamebg.y = c.height/2;
 gamebg.w = c.width; 
 gamebg.h = c.height;
 
+var gameOver = false;
 
 
 /*---------------Game Screens (states)----------------*/
@@ -131,30 +112,38 @@ states["menu"] = function()
 {
     if(enter)
     {
+        amienceFX.play();
+        rollLevel();
         state = "main";
         
+        WinFX.pause();
+        WinFX.currentTime = 0;
         //timer = setInterval(state, fps);
         
     }
     menu.renderSprite();
-    mainMenuGraphic.render();
     ctx.fillStyle ="blue"; 
-    ctx.font = "30px arial"; 
+    ctx.font = "bold 30px GameFont"; 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("Jumpman surivor", c.width / 2, (c.height / 2) - 40);
+    ctx.fillText("Jumpman Surivor", c.width / 2, (c.height / 2) - 40);
     ctx.fillStyle ="#04D9FF";
-    ctx.fillText("press eneter", c.width / 2, (c.height / 2) + 40);
+    ctx.fillText("press enter", c.width / 2, (c.height / 2) + 40);
 
     
 }
 
 states["win"] = function()
 {
+      
     // Set player to start on the platform
     avatar.x = startPlatform.x;
     avatar.y = startPlatform.y - 30;
-    setTimeout(function(){state = "menu"}, 2000);
+    if(gameOver){
+        gameOver = false;
+        setTimeout(function(){state = "menu"}, 2000);
+    }
+    
     ctx.fillText("YOU WIN!", c.width / 2, c.height / 2);
     //mainMenuGraphic.render();
     
@@ -196,14 +185,15 @@ states["main"] = function()
     {
         if(avatar.overlaps(obstacles[i]))
         {
+            deathSoundFX.play();
             avatar.x = startPlatform.x;
             avatar.y = startPlatform.y - 100;
         }
         obstacles[i].renderSprite();
     }
     //Hitting the gound(reset to start)
-    if (playerY >= groundY) { 
-        resetGame();
+    //if (playerY >= groundY) { 
+        //resetGame();
 
 
     // Render Platforms
@@ -215,6 +205,12 @@ states["main"] = function()
 
     // Win Detection
    if (avatar.overlaps(goal)) {
+
+    amienceFX.pause();
+    amienceFX.currentTime = 0;
+    
+     WinFX.play();
+    gameOver = true;
     ctx.fillStyle = "black";
     ctx.font = "50px Arial";
     ctx.textAlign = "center";
@@ -225,18 +221,24 @@ states["main"] = function()
     avatar.y = startPlatform.y - 30;
     state = "win";
     //avatar.overlaps = function() { return true; };
-}
+    }
 
 
     if(avatar.y > c.height - avatar.h/2) { 
         avatar.vy = 0;
-        avatar.y = c.height - avatar.h/2; 
+        deathSoundFX.play();
+        //resets player
+        avatar.x = startPlatform.x;
+        avatar.y = startPlatform.y - 30;
         
-        if(space == true)
-        {
-            avatar.vy = -20;
+        // avatar.y = c.height - avatar.h/2; 
+        
+        // if(space == true)
+        // {
+        //     avatar.vy = -20;
             
-        }
+        // }
+
     }
    //collision with platforms 
     for(var i = 0; i< platforms.length; i++){
@@ -258,7 +260,7 @@ states["main"] = function()
             avatar.y--;
             if(space == true)
             {
-                avatar.vy = -10;
+                avatar.vy = -20;
                 
             }
     }
@@ -271,12 +273,11 @@ state = "menu";
 function gameLoop(){
     ctx.clearRect(0,0,c.width,c.height);
     //call the gamestate
-
+    //console.log(state);
     states[state]();
 }
 
 function rand(_low, _high) 
 {
     return Math.random()*(_high - _low) + _low;
-    }
 }
