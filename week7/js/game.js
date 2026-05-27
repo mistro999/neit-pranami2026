@@ -28,7 +28,7 @@ startPlatform.x = 50;
 startPlatform.y = 250;
 startPlatform.w = 100;
 startPlatform.h = 20;
-startPlatform.color = `dark gray`;
+startPlatform.color = `grey`;
 
 // Set player to start on the platform
 avatar.x = startPlatform.x;
@@ -73,7 +73,7 @@ function rollLevel(){
     for(var i = 0; i < platCount; i++)
     {
         platforms[i] = new gameObject();
-        platforms[i].color = `dark grey`;
+        platforms[i].color = `grey`;
         platforms[i].w = 80;
         platforms[i].h = 15;
         platforms[i].y = rand(300, c.height - 40);
@@ -137,6 +137,7 @@ states["menu"] = function()
     ctx.textBaseline = "middle";
     ctx.fillText("Jumpman Surivor", c.width / 2, (c.height / 2) - 40);
     ctx.fillStyle =textColor;
+    //ctx.fillStyle ="#04D9FF";
     
     ctx.fillText("press enter", c.width / 2, (c.height / 2) + 40);
 
@@ -210,9 +211,11 @@ states["main"] = function()
 
 
     // Render Platforms
+    ctx.fillStyle = startPlatform.color;
     startPlatform.render();
     for(var i = 0; i < platforms.length; i++)
     {
+        
         platforms[i].render();
     }
 
