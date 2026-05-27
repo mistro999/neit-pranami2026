@@ -108,6 +108,15 @@ var gameOver = false;
 
 
 /*---------------Game Screens (states)----------------*/
+var textColor;
+var on;
+setInterval(()=>{on = !on; if(on){textColor = toggleColor("#04D9FF")}else{textColor = toggleColor("rgba(4, 217, 255, 0)")}} , 1000);
+
+function toggleColor(color){
+    
+    return color;
+}
+
 states["menu"] = function()
 {
     if(enter)
@@ -127,11 +136,13 @@ states["menu"] = function()
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("Jumpman Surivor", c.width / 2, (c.height / 2) - 40);
-    ctx.fillStyle ="#04D9FF";
+    ctx.fillStyle =textColor;
+    
     ctx.fillText("press enter", c.width / 2, (c.height / 2) + 40);
 
     
 }
+
 
 states["win"] = function()
 {
@@ -143,7 +154,9 @@ states["win"] = function()
         gameOver = false;
         setTimeout(function(){state = "menu"}, 2000);
     }
-    
+     gamebg.renderSprite();
+    ctx.fillStyle ="blue"; 
+    ctx.font = "bold 30px GameFont"; 
     ctx.fillText("YOU WIN!", c.width / 2, c.height / 2);
     //mainMenuGraphic.render();
     
